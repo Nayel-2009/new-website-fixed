@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Game Verse · modern game ratings</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ========== EXACT SAME STYLING - NO VISUAL CHANGES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f5f7fb;
+            color: #1e1e2f;
+            line-height: 1.5;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .navbar {
+            background: #0b0c1a;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .navbar {
+                padding: 1rem 2rem;
+            }
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(130deg, #b48aff, #5fc3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        @media (min-width: 768px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+        }
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .nav-links {
+                width: auto;
+                gap: 2rem;
+            }
+        }
+        .nav-links a {
+            color: #eee;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover { color: #a28eff; }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #1f2336;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            flex: 1 1 auto;
+            min-width: 180px;
+            position: relative;
+        }
+        .search-box i { color: #a1a9c6; margin-right: 6px; }
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 0.5rem 0;
+            width: 100%;
+            min-width: 120px;
+        }
+        .search-box input::placeholder { color: #6b7299; }
+        
+        /* Search results dropdown */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px;
+            margin-top: 5px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+        .search-results.show {
+            display: block;
+        }
+        .search-result-item {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #1e1e2f;
+        }
+        .search-result-item:hover {
+            background: #f0f2f8;
+        }
+        .search-result-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .search-result-item .result-title {
+            font-weight: 600;
+        }
+        .search-result-item .result-platform {
+            font-size: 0.8rem;
+            color: #6b7299;
+        }
+        
+        .login-btn {
+            background: #2f354a;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+        @media (min-width: 768px) {
+            .login-btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        .login-btn:hover {
+            background: #4c5480;
+            transform: scale(1.02);
+        }
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        @media (min-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+        }
+        .hero {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 35px -8px rgba(0,0,0,0.15);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            transition: box-shadow 0.3s;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .hero {
+                flex-direction: row;
+                border-radius: 36px;
+            }
+        }
+        .hero:hover { box-shadow: 0 25px 45px -10px rgba(75,45,200,0.2); }
+        .hero-left {
+            width: 100%;
+            height: 200px;
+            background: #2b2e4a;
+            background-size: cover;
+            background-position: center;
+        }
+        @media (min-width: 768px) {
+            .hero-left {
+                flex: 1 1 300px;
+                height: auto;
+                min-height: 280px;
+            }
+        }
+        .hero-right {
+            width: 100%;
+            padding: 1.5rem;
+            background: white;
+        }
+        @media (min-width: 768px) {
+            .hero-right {
+                flex: 1 1 350px;
+                padding: 2rem;
+            }
+        }
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        @media (min-width: 768px) {
+            .game-title {
+                font-size: 2.2rem;
+            }
+        }
+        .game-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: #5a6275;
+            margin-bottom: 1rem;
+        }
+        .score-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .metascore-box {
+            background: #66cc33;
+            color: white;
+            font-weight: 800;
+            font-size: 2.2rem;
+            min-width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 14px rgba(0,0,0,0.2);
+        }
+        @media (min-width: 768px) {
+            .metascore-box {
+                font-size: 2.8rem;
+                min-width: 90px;
+                height: 90px;
+                border-radius: 20px;
+            }
+        }
+        .userscore-badge {
+            background: #1e1e2f;
+            color: gold;
+            font-weight: 700;
+            font-size: 1.2rem;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        @media (min-width: 768px) {
+            .userscore-badge {
+                font-size: 1.5rem;
+                padding: 0.5rem 1.2rem;
+            }
+        }
+        .description {
+            color: #2d3349;
+            margin: 1rem 0 1.5rem;
+            max-width: 450px;
+        }
+        .add-review-btn {
+            background: #0b0c1a;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        @media (min-width: 768px) {
+            .add-review-btn {
+                padding: 0.9rem 2rem;
+                font-size: 1rem;
+            }
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.5rem 0 1rem;
+        }
+        .section-header h2 { 
+            font-size: 1.4rem; 
+            font-weight: 600; 
+        }
+        @media (min-width: 768px) {
+            .section-header h2 { 
+                font-size: 1.8rem; 
+            }
+        }
+        .review-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .review-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .review-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
+        }
+        .review-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 20px -7px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.02);
+            width: 100%;
+        }
+        .scroll-cards {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0.2rem 1.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: #b48aff #e1e5f0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .game-card {
+            flex: 0 0 160px;
+            background: white;
+            border-radius: 20px;
+            padding: 1rem 0.8rem 1.2rem;
+            box-shadow: 0 12px 25px -12px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        @media (min-width: 768px) {
+            .game-card {
+                flex: 0 0 200px;
+                padding: 1.3rem 1rem 1.5rem;
+            }
+        }
+        .card-thumb {
+            width: 100%;
+            height: 100px;
+            border-radius: 14px;
+            background-size: cover;
+            background-position: center;
+        }
+        @media (min-width: 768px) {
+            .card-thumb {
+                height: 120px;
+            }
+        }
+        .detail-page {
+            display: none;
+            margin-top: 1rem;
+        }
+        .detail-banner {
+            width: 100%;
+            height: 200px;
+            background: #353b5c;
+            border-radius: 24px;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .detail-banner {
+                height: 320px;
+                border-radius: 40px;
+            }
+        }
+        .detail-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .detail-grid {
+                flex-direction: row;
+                gap: 2.5rem;
+            }
+        }
+        .info-panel, .rating-panel {
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .info-panel { flex: 2; }
+            .rating-panel { flex: 1; }
+        }
+        .rating-bar { 
+            background: #eee; height: 20px; border-radius: 30px; margin: 0.8rem 0; width: 100%;
+        }
+        .bar-fill {
+            height: 20px; border-radius: 30px; background: #66cc33; width: 0%;
+        }
+        .review-form {
+            background: white; border-radius: 30px; padding: 1.8rem; margin: 2rem 0;
+        }
+        .review-form input, .review-form textarea, .review-form select {
+            width: 100%; padding: 0.8rem; margin: 0.5rem 0 1.2rem; border-radius: 16px; border: 1px solid #ccc;
+        }
+        .user-review-item {
+            background: white;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            word-wrap: break-word;
+        }
+        .similar-scroll {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .back-link {
+            margin: 1rem 0;
+            display: inline-block;
+            font-weight: 600;
+            color: #0b0c1a;
+            text-decoration: none;
+        }
+        .admin-panel {
+            background: #1e1e2f;
+            border-radius: 40px;
+            padding: 0.3rem 0.8rem;
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .admin-panel button {
+            background: #2f354a;
+            border: none;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        @media (min-width: 768px) {
+            .admin-panel button {
+                font-size: 0.8rem;
+                padding: 0.3rem 1rem;
+            }
+        }
+        .hidden { display: none !important; }
+        .login-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 30px;
+            max-width: 95%;
+            margin: 1rem auto;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+        }
+        @media (min-width: 640px) {
+            .login-container {
+                max-width: 400px;
+                padding: 2rem;
+            }
+        }
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .tab-buttons button {
+            background: #2f354a;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex: 1 1 auto;
+        }
+        .tab-buttons button.active {
+            background: #a28eff;
+        }
+        .delete-review-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .score-green { background: #28a745; }
+        .score-yellow { background: #ffb347; }
+        .score-red { background: #dc3545; }
+        .mini-score {
+            font-weight: 800;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+        }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.8rem;
+        }
+        .review-count { font-size: 0.8rem; color: #4a5270; }
+        .genre-tag {
+            background: #eaeefc;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #121726;
+        }
+        .readmore {
+            background: transparent;
+            border: 1px solid #cfd6ee;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #1e1e2f;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR - IDENTICAL STRUCTURE -->
+    <nav class="navbar">
+        <div class="logo">Game Verse</div>
+        <div class="nav-links">
+            <a href="#" id="homeLink">Games</a>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search games..." id="searchInput" autocomplete="off">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            <div id="authSection">
+                <button class="login-btn" id="loginRegisterBtn"><i class="fas fa-user-circle"></i> Login / Register</button>
+            </div>
+            <div id="adminPanel" class="admin-panel hidden">
+                <span style="color:#a28eff;">Admin</span>
+                <button id="adminDashboardBtn">📊 Dashboard</button>
+                <button id="logoutBtn">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- LOGIN/REGISTER MODAL -->
+    <div id="loginModal" class="container login-container hidden">
+        <div class="tab-buttons">
+            <button id="loginTab" class="active">Login</button>
+            <button id="registerTab">Register</button>
+        </div>
+        <h3 id="modalTitle">🔐 Login</h3>
+        <input type="email" id="loginEmail" placeholder="Email" value="">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button class="add-review-btn" id="loginSubmit">Submit</button>
+        <p id="loginError" style="color:red; margin-top:1rem;"></p>
+    </div>
+
+    <!-- ADMIN DASHBOARD MODAL -->
+    <div id="adminDashboardModal" class="container login-container hidden" style="max-width: 800px;">
+        <h3>📊 Admin Dashboard</h3>
+        <div class="tab-buttons">
+            <button id="manageGamesTab" class="active">Manage Games</button>
+            <button id="manageReviewsTab">Manage Reviews</button>
+        </div>
+        <div id="manageGamesSection">
+            <button class="add-review-btn" id="addGameBtn" style="margin: 1rem 0; width: 100%;">➕ Add New Game</button>
+            <div id="gamesList" style="max-height: 400px; overflow-y: auto;"></div>
+        </div>
+        <div id="manageReviewsSection" class="hidden">
+            <div id="reviewsList" style="max-height: 400px; overflow-y: auto;"></div>
+        </div>
+        <button class="add-review-btn" id="closeDashboardBtn" style="background:#6c757d; margin-top:1rem; width: 100%;">Close</button>
+    </div>
+
+    <!-- GAME EDIT MODAL -->
+    <div id="gameEditModal" class="container login-container hidden">
+        <h3 id="gameModalTitle">➕ Add New Game</h3>
+        <input type="text" id="gameIdInput" placeholder="Game ID (unique)" value="">
+        <input type="text" id="gameTitleInput" placeholder="Title" value="">
+        <input type="text" id="gamePlatformInput" placeholder="Platform (e.g. PS5 · PC)" value="">
+        <input type="text" id="gameReleaseInput" placeholder="Release year" value="">
+        <input type="text" id="gameGenreInput" placeholder="Genre" value="">
+        <input type="number" id="gameMetaInput" placeholder="Metascore (0-100)" min="0" max="100" value="">
+        <input type="text" id="gameBannerInput" placeholder="Image URL" value="">
+        <textarea id="gameDescInput" placeholder="Description" rows="2"></textarea>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="add-review-btn" id="saveGameBtn" style="flex: 2;">Save</button>
+            <button class="add-review-btn" id="cancelGameEditBtn" style="flex: 1; background:#6c757d;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- HOMEPAGE -->
+    <main class="container" id="homepageView">
+        <div class="hero" id="heroSection">
+            <div class="hero-left" id="heroImage"></div>
+            <div class="hero-right">
+                <h1 class="game-title" id="heroTitle">Eclipse Protocol</h1>
+                <div class="game-meta"><span id="heroPlatform">PS5 · XSX · PC</span><span id="heroDate">2025</span></div>
+                <div class="score-row">
+                    <div class="metascore-box" id="heroMeta">91</div>
+                    <div class="userscore-badge" id="heroUser"><i class="fas fa-star"></i> <span>8.7</span></div>
+                </div>
+                <p class="description" id="heroDesc">Featured game description</p>
+                <button class="add-review-btn" id="heroAddReview"><i class="fas fa-pen"></i> Add Review</button>
+            </div>
+        </div>
+        <div class="section-header"><h2>📰 Latest reviews</h2><span>see all</span></div>
+        <div class="review-grid" id="latestReviewsGrid"></div>
+        <div class="section-header"><h2>✨ New & notable</h2><span>scroll →</span></div>
+        <div class="scroll-cards" id="notableGames"></div>
+    </main>
+
+    <!-- GAME DETAIL PAGE -->
+    <div class="container detail-page" id="gameDetailView">
+        <a href="#" id="backToHome" class="back-link">← Back to all games</a>
+        <div class="detail-banner" id="detailBanner"></div>
+        <div class="detail-grid">
+            <div class="info-panel">
+                <h1 id="detailTitle">Eclipse Protocol</h1>
+                <p id="detailPlatform">PS5, Xbox, PC</p>
+                <p id="detailDesc"></p>
+                <div class="rating-bar"><div class="bar-fill" id="criticBarFill"></div></div>
+                <p><strong>Critic score:</strong> <span id="criticScoreSpan">91</span></p>
+                <p><strong>User score:</strong> <span id="userScoreSpan">8.7</span> (based on <span id="userCountSpan">12</span> reviews)</p>
+            </div>
+            <div class="rating-panel">
+                <h3>Rating breakdown</h3>
+                <div>positive <span id="positivePercent">80%</span></div><div class="rating-bar"><div class="bar-fill" id="positiveBar" style="width:80%"></div></div>
+                <div>mixed <span id="mixedPercent">15%</span></div><div class="rating-bar"><div class="bar-fill" id="mixedBar" style="width:15%; background:#ffb347;"></div></div>
+                <div>negative <span id="negativePercent">5%</span></div><div class="rating-bar"><div class="bar-fill" id="negativeBar" style="width:5%; background:#dc3545;"></div></div>
+            </div>
+        </div>
+        <div class="review-form" id="reviewFormSection">
+            <h3>📝 Write your review</h3>
+            <select id="ratingSelect">
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+            </select>
+            <textarea id="commentInput" placeholder="Your thoughts..." rows="2"></textarea>
+            <button class="add-review-btn" id="submitReviewBtn">Submit review</button>
+        </div>
+        <h3>🗣️ User reviews</h3>
+        <div id="userReviewsList"></div>
+        <h3>Similar games</h3>
+        <div class="similar-scroll" id="similarGames"></div>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== FIXED AUTHENTICATION & DATA LAYER ====================
+            const ADMIN_EMAIL = 'naelkasanda0@gmail.com';
+            const ADMIN_PW = 'naelkasanda';
+
+            // User database
+            let users = [];
+            try {
+                users = JSON.parse(localStorage.getItem('gameverse_users')) || [];
+            } catch { users = []; }
+
+            // Current session - persists across refresh
+            let currentUser = null;
+            try {
+                const session = JSON.parse(localStorage.getItem('gameverse_session'));
+                if (session && session.email) {
+                    if (session.email === ADMIN_EMAIL) {
+                        currentUser = { email: ADMIN_EMAIL, isAdmin: true };
+                    } else {
+                        const user = users.find(u => u.email === session.email);
+                        if (user) {
+                            currentUser = { email: user.email, isAdmin: false };
+                        }
+                    }
+                }
+            } catch { localStorage.removeItem('gameverse_session'); }
+
+            // ==================== EXPANDED GAMES DATABASE WITH REQUESTED TITLES ====================
+            let games = [
+                { id: 'eclipse', title: 'Eclipse Protocol', platform: 'PS5 · XSX · PC', release: '2025', genre: 'tactical shooter', meta: 91, metaColor: 'green', userAvg: 8.7, reviewsCount: 12, banner: 'https://images.unsplash.com/photo-1615971677499-5467cbab01c0?w=600&auto=format', desc: 'Tactical sci-fi shooter with rogue-lite elements.' },
+                { id: 'neura', title: 'Neura Drifter', platform: 'PC · PS5', release: '2024', genre: 'cyberpunk RPG', meta: 84, metaColor: 'green', userAvg: 8.2, reviewsCount: 31, banner: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format', desc: 'Neural hacking meets fast combat.' },
+                { id: 'naruto4', title: 'Naruto Storm 4', platform: 'PS4 · Xbox · PC', release: '2016', genre: 'anime fighting', meta: 85, metaColor: 'green', userAvg: 8.9, reviewsCount: 102, banner: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/349040/header.jpg', desc: 'The ultimate ninja storm experience.' },
+                { id: 'naruto3', title: 'Naruto Storm 3', platform: 'PS3 · PC', release: '2013', genre: 'anime fighting', meta: 80, metaColor: 'green', userAvg: 8.5, reviewsCount: 78, banner: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/234670/header.jpg', desc: 'Full burst edition.' },
+                { id: 'connections', title: 'Naruto Storm Connections', platform: 'PS5 · XSX', release: '2023', genre: 'anime fighting', meta: 78, metaColor: 'yellow', userAvg: 8.1, reviewsCount: 45, banner: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2155300/header.jpg', desc: 'Connect with the newest roster.' },
+                { id: 'dbspark', title: 'Dragon Ball Sparking Zero', platform: 'PS5 · XSX', release: '2024', genre: '3D fighter', meta: 89, metaColor: 'green', userAvg: 9.2, reviewsCount: 67, banner: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1790600/header.jpg', desc: 'The ultimate Budokai Tenkaichi returns.' },
+                // NEW REQUESTED GAMES
+                { id: 'eafc26', title: 'EA FC 26', platform: 'PS5 · XSX · PC', release: '2026', genre: 'sports', meta: 85, metaColor: 'green', userAvg: 8.3, reviewsCount: 45, banner: 'https://images.unsplash.com/photo-1511882150382-421056c89033?w=600', desc: 'The next evolution in football gaming.' },
+                { id: 'eafc25', title: 'EA FC 25', platform: 'PS5 · XSX · PC', release: '2025', genre: 'sports', meta: 83, metaColor: 'green', userAvg: 8.1, reviewsCount: 78, banner: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600', desc: 'Authentic football action.' },
+                { id: 'gta5', title: 'GTA V', platform: 'PS5 · XSX · PC', release: '2013', genre: 'open world', meta: 97, metaColor: 'green', userAvg: 9.4, reviewsCount: 1250, banner: 'https://images.unsplash.com/photo-1615807713086-bfc4975801d0?w=600', desc: 'The legendary open-world crime epic.' },
+                { id: 'fallguys', title: 'Fall Guys', platform: 'PC · PS5 · Switch', release: '2020', genre: 'battle royale', meta: 81, metaColor: 'green', userAvg: 8.2, reviewsCount: 340, banner: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600', desc: 'Whimsical multiplayer mayhem.' },
+                { id: 'fortnite', title: 'Fortnite', platform: 'PC · PS5 · Xbox', release: '2017', genre: 'battle royale', meta: 83, metaColor: 'green', userAvg: 8.4, reviewsCount: 1200, banner: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600', desc: 'The biggest battle royale.' },
+                { id: 'roblox', title: 'Roblox', platform: 'PC · Mobile · Xbox', release: '2006', genre: 'platform', meta: 78, metaColor: 'yellow', userAvg: 7.8, reviewsCount: 512, banner: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600', desc: 'Play together, create together.' },
+                { id: 'blockblast', title: 'Block Blast', platform: 'Mobile', release: '2022', genre: 'puzzle', meta: 82, metaColor: 'green', userAvg: 8.7, reviewsCount: 210, banner: 'https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=600', desc: 'Addictive block puzzle game.' },
+                { id: 'spiderman2', title: 'Spider-Man 2', platform: 'PS5', release: '2023', genre: 'action', meta: 90, metaColor: 'green', userAvg: 9.0, reviewsCount: 143, banner: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2654490/header.jpg', desc: 'Swing across Marvel’s New York.' },
+                { id: 'zelda', title: 'Zelda: Tears of Kingdom', platform: 'Switch', release: '2023', genre: 'adventure', meta: 96, metaColor: 'green', userAvg: 9.5, reviewsCount: 301, banner: 'https://assets.nintendo.com/image/upload/ar_16:9,c_lpad,w_1240/b_white/f_auto/q_auto/ncom/software/switch/70010000063725/811458b4a6d0e9f0b3e5c5e6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4g5h6', desc: 'The legend continues.' },
+                { id: 'cyberpunk', title: 'Cyberpunk 2077', platform: 'PS5 · XSX · PC', release: '2020', genre: 'RPG', meta: 86, metaColor: 'green', userAvg: 8.3, reviewsCount: 789, banner: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg', desc: 'Open-world action RPG.' },
+                { id: 'eldenring', title: 'Elden Ring', platform: 'PS5 · XSX · PC', release: '2022', genre: 'soulslike', meta: 96, metaColor: 'green', userAvg: 9.6, reviewsCount: 654, banner: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg', desc: 'The critically acclaimed masterpiece.' }
+            ];
+
+            // Load games from localStorage
+            try {
+                const storedGames = localStorage.getItem('gameverse_games');
+                if (storedGames) {
+                    games = JSON.parse(storedGames);
+                } else {
+                    localStorage.setItem('gameverse_games', JSON.stringify(games));
+                }
+            } catch { }
+
+            // ==================== REVIEWS STORAGE ====================
+            function getStoredReviews(gameId) {
+                try {
+                    const stored = localStorage.getItem(`gameverse_reviews_${gameId}`);
+                    return stored ? JSON.parse(stored) : [];
+                } catch { return []; }
+            }
+
+            function saveReviewToStorage(gameId, reviews) {
+                localStorage.setItem(`gameverse_reviews_${gameId}`, JSON.stringify(reviews));
+            }
+
+            function deleteAllReviewsForGame(gameId) {
+                localStorage.removeItem(`gameverse_reviews_${gameId}`);
+            }
+
+            function getAllReviews() {
+                let all = [];
+                games.forEach(game => {
+                    const reviews = getStoredReviews(game.id);
+                    all = all.concat(reviews.map(r => ({ ...r, gameTitle: game.title, gameId: game.id })));
+                });
+                return all.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+
+            function addReview(gameId, rating, comment, userEmail) {
+                const reviews = getStoredReviews(gameId);
+                if (reviews.some(r => r.userEmail === userEmail)) {
+                    return false;
+                }
+                const newReview = {
+                    user: userEmail.split('@')[0],
+                    userEmail: userEmail,
+                    rating: parseInt(rating),
+                    comment: comment,
+                    date: new Date().toISOString()
+                };
+                reviews.push(newReview);
+                saveReviewToStorage(gameId, reviews);
+                return true;
+            }
+
+            function deleteReview(gameId, userEmail, reviewDate) {
+                let reviews = getStoredReviews(gameId);
+                reviews = reviews.filter(r => !(r.userEmail === userEmail && r.date === reviewDate));
+                saveReviewToStorage(gameId, reviews);
+            }
+
+            function computeUserAverage(gameId) {
+                const stored = getStoredReviews(gameId);
+                if (stored.length === 0) {
+                    const game = games.find(g => g.id === gameId);
+                    return game ? game.userAvg : 0;
+                }
+                const sum = stored.reduce((acc, r) => acc + r.rating, 0);
+                return Math.round((sum / stored.length) * 10) / 10;
+            }
+
+            // ==================== UI STATE ====================
+            let currentGameId = games[0]?.id || 'eclipse';
+
+            // ==================== SEARCH FUNCTIONALITY ====================
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+
+            function performSearch(query) {
+                if (!query.trim()) {
+                    searchResults.classList.remove('show');
+                    return;
+                }
+                const lowerQuery = query.toLowerCase();
+                const matches = games.filter(game => 
+                    game.title.toLowerCase().includes(lowerQuery) || 
+                    game.genre.toLowerCase().includes(lowerQuery)
+                ).slice(0, 5); // Limit to 5 results
+
+                if (matches.length === 0) {
+                    searchResults.innerHTML = '<div class="search-result-item">No games found</div>';
+                    searchResults.classList.add('show');
+                    return;
+                }
+
+                searchResults.innerHTML = matches.map(game => `
+                    <div class="search-result-item" data-game-id="${game.id}">
+                        <img src="${game.banner}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600'">
+                        <div>
+                            <div class="result-title">${game.title}</div>
+                            <div class="result-platform">${game.platform} · ${game.genre}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add click handlers to search results
+                document.querySelectorAll('.search-result-item[data-game-id]').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const gameId = item.dataset.gameId;
+                        showGameDetail(gameId);
+                        searchResults.classList.remove('show');
+                        searchInput.value = '';
+                    });
+                });
+
+                searchResults.classList.add('show');
+            }
+
+            // Debounce search input
+            let searchTimeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(searchInput.value);
+                }, 300);
+            });
+
+            // Close search results when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.remove('show');
+                }
+            });
+
+            // ==================== RENDER FUNCTIONS ====================
+            function renderHomePage() {
+                const featured = games[0];
+                if (!featured) return;
+                document.getElementById('heroImage').style.backgroundImage = `url('${featured.banner}')`;
+                document.getElementById('heroTitle').innerText = featured.title;
+                document.getElementById('heroPlatform').innerText = featured.platform;
+                document.getElementById('heroDate').innerText = featured.release;
+                document.getElementById('heroMeta').innerText = featured.meta;
+                document.getElementById('heroDesc').innerText = featured.desc;
+                const userAvg = computeUserAverage(featured.id);
+                document.querySelector('#heroUser span').innerText = userAvg;
+
+                // Latest reviews
+                const allReviews = getAllReviews().slice(0, 6);
+                const latestGrid = document.getElementById('latestReviewsGrid');
+                if (allReviews.length === 0) {
+                    latestGrid.innerHTML = '<div class="review-card">No reviews yet. Be the first!</div>';
+                } else {
+                    latestGrid.innerHTML = allReviews.map(r => {
+                        const scoreColor = r.rating >= 8 ? '#28a745' : r.rating >= 5 ? '#ffb347' : '#dc3545';
+                        return `<div class="review-card">
+                            <div class="review-score" style="background:${scoreColor}">${r.rating}</div>
+                            <div class="reviewer-name">${r.user} on ${r.gameTitle}</div>
+                            <div class="review-summary">${r.comment.substring(0,50)}...</div>
+                            <button class="readmore">Read More</button>
+                        </div>`;
+                    }).join('');
+                }
+
+                // New & Notable
+                const notableDiv = document.getElementById('notableGames');
+                notableDiv.innerHTML = games.map(game => {
+                    const scoreClass = game.meta >= 75 ? 'score-green' : game.meta >= 50 ? 'score-yellow' : 'score-red';
+                    const storedCount = getStoredReviews(game.id).length;
+                    const displayCount = storedCount || game.reviewsCount;
+                    return `<div class="game-card" data-game-id="${game.id}">
+                        <div class="card-thumb" style="background-image: url('${game.banner}');"></div>
+                        <h4>${game.title}</h4>
+                        <span class="genre-tag">${game.genre}</span>
+                        <div class="card-footer">
+                            <span class="mini-score ${scoreClass}">${game.meta}</span>
+                            <span class="review-count">📝 ${displayCount}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+
+                document.querySelectorAll('.game-card').forEach(card => {
+                    card.addEventListener('click', () => showGameDetail(card.dataset.gameId));
+                });
+            }
+
+            function showGameDetail(gameId) {
+                currentGameId = gameId;
+                const game = games.find(g => g.id === gameId);
+                if (!game) return;
+                
+                document.getElementById('homepageView').style.display = 'none';
+                document.getElementById('gameDetailView').style.display = 'block';
+
+                document.getElementById('detailBanner').style.backgroundImage = `url('${game.banner}')`;
+                document.getElementById('detailTitle').innerText = game.title;
+                document.getElementById('detailPlatform').innerText = game.platform;
+                document.getElementById('detailDesc').innerText = game.desc;
+                document.getElementById('criticScoreSpan').innerText = game.meta;
+                document.getElementById('criticBarFill').style.width = game.meta + '%';
+
+                const stored = getStoredReviews(gameId);
+                const totalReviews = stored.length;
+                const avg = totalReviews ? (stored.reduce((s,r)=>s+r.rating,0)/totalReviews).toFixed(1) : game.userAvg;
+                document.getElementById('userScoreSpan').innerText = avg;
+                document.getElementById('userCountSpan').innerText = totalReviews || game.reviewsCount;
+
+                if (stored.length) {
+                    const pos = stored.filter(r => r.rating >= 8).length;
+                    const mix = stored.filter(r => r.rating >=5 && r.rating <8).length;
+                    const neg = stored.filter(r => r.rating <5).length;
+                    document.getElementById('positivePercent').innerText = Math.round(pos/totalReviews*100)+'%';
+                    document.getElementById('mixedPercent').innerText = Math.round(mix/totalReviews*100)+'%';
+                    document.getElementById('negativePercent').innerText = Math.round(neg/totalReviews*100)+'%';
+                    document.getElementById('positiveBar').style.width = Math.round(pos/totalReviews*100)+'%';
+                    document.getElementById('mixedBar').style.width = Math.round(mix/totalReviews*100)+'%';
+                    document.getElementById('negativeBar').style.width = Math.round(neg/totalReviews*100)+'%';
+                } else {
+                    document.getElementById('positivePercent').innerText = '75%';
+                    document.getElementById('mixedPercent').innerText = '15%';
+                    document.getElementById('negativePercent').innerText = '10%';
+                }
+
+                renderUserReviews(gameId);
+                renderSimilarGames(gameId);
+            }
+
+            function renderUserReviews(gameId) {
+                const stored = getStoredReviews(gameId);
+                const listDiv = document.getElementById('userReviewsList');
+                if (!stored.length) {
+                    listDiv.innerHTML = '<p>No user reviews yet. Be the first!</p>';
+                    return;
+                }
+                listDiv.innerHTML = stored.slice().reverse().map(r => {
+                    const canDelete = currentUser?.isAdmin || (currentUser?.email === r.userEmail);
+                    const deleteBtn = canDelete ? `<button class="delete-review-btn" data-game="${gameId}" data-email="${r.userEmail}" data-date="${r.date}">🗑️ Delete</button>` : '';
+                    return `<div class="user-review-item">
+                        ${deleteBtn}
+                        <strong>${r.user}  •  ${new Date(r.date).toLocaleDateString()}</strong>  
+                        <span style="background:gold; padding:0.2rem 0.8rem; border-radius:30px;">⭐ ${r.rating}/10</span>
+                        <p>${r.comment}</p>
+                    </div>`;
+                }).join('');
+
+                document.querySelectorAll('.delete-review-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!currentUser?.isAdmin && currentUser?.email !== btn.dataset.email) return;
+                        deleteReview(btn.dataset.game, btn.dataset.email, btn.dataset.date);
+                        if (currentGameId === btn.dataset.game) {
+                            renderUserReviews(btn.dataset.game);
+                            const newAvg = computeUserAverage(btn.dataset.game);
+                            document.getElementById('userScoreSpan').innerText = newAvg;
+                            document.getElementById('userCountSpan').innerText = getStoredReviews(btn.dataset.game).length;
+                        }
+                        renderHomePage();
+                        if (!document.getElementById('manageReviewsSection').classList.contains('hidden')) {
+                            renderAdminReviewsList();
+                        }
+                    });
+                });
+            }
+
+            function renderSimilarGames(gameId) {
+                const similarDiv = document.getElementById('similarGames');
+                similarDiv.innerHTML = '';
+                games.filter(g => g.id !== gameId).slice(0,4).forEach(sim => {
+                    const card = document.createElement('div');
+                    card.className = 'game-card';
+                    card.style.flex = '0 0 150px';
+                    card.innerHTML = `<div class="card-thumb" style="background-image:url('${sim.banner}'); height:90px;"></div><h5>${sim.title}</h5><span class="mini-score score-green">${sim.meta}</span>`;
+                    card.addEventListener('click', () => showGameDetail(sim.id));
+                    similarDiv.appendChild(card);
+                });
+            }
+
+            // ==================== AUTH UI ====================
+            function updateAuthUI() {
+                const authSection = document.getElementById('authSection');
+                const adminPanel = document.getElementById('adminPanel');
+                if (currentUser) {
+                    if (currentUser.isAdmin) {
+                        authSection.innerHTML = `<button class="login-btn" id="userGreeting"><i class="fas fa-user-circle"></i> ${currentUser.email}</button>`;
+                        adminPanel.classList.remove('hidden');
+                    } else {
+                        authSection.innerHTML = `
+                            <button class="login-btn" id="userGreeting"><i class="fas fa-user-circle"></i> ${currentUser.email}</button>
+                            <button class="login-btn" id="userLogoutBtn" style="background:#dc3545;">Logout</button>
+                        `;
+                        adminPanel.classList.add('hidden');
+                        document.getElementById('userLogoutBtn').addEventListener('click', logout);
+                    }
+                } else {
+                    authSection.innerHTML = '<button class="login-btn" id="loginRegisterBtn"><i class="fas fa-user-circle"></i> Login / Register</button>';
+                    adminPanel.classList.add('hidden');
+                    document.getElementById('loginRegisterBtn').addEventListener('click', () => {
+                        document.getElementById('loginModal').classList.remove('hidden');
+                    });
+                }
+            }
+
+            function logout() {
+                currentUser = null;
+                localStorage.removeItem('gameverse_session');
+                updateAuthUI();
+                renderHomePage();
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('adminDashboardModal').classList.add('hidden');
+                document.getElementById('gameEditModal').classList.add('hidden');
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // ==================== ADMIN DASHBOARD ====================
+            function renderAdminGamesList() {
+                const gamesList = document.getElementById('gamesList');
+                gamesList.innerHTML = games.map(game => `
+                    <div style="background:#f0f2f8; padding:1rem; border-radius:16px; margin-bottom:1rem;">
+                        <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+                            <img src="${game.banner}" style="width:50px; height:50px; object-fit:cover; border-radius:10px;">
+                            <div style="flex:1; min-width:150px;">
+                                <strong>${game.title}</strong> (${game.id})<br>
+                                <small>${game.platform} · ${game.genre} · Meta: ${game.meta}</small>
+                            </div>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="login-btn edit-game-btn" data-id="${game.id}" style="padding:0.3rem 0.8rem;">✏️</button>
+                                <button class="login-btn delete-game-btn" data-id="${game.id}" style="padding:0.3rem 0.8rem; background:#dc3545;">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.edit-game-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const game = games.find(g => g.id === btn.dataset.id);
+                        if (!game) return;
+                        document.getElementById('gameModalTitle').innerText = '✏️ Edit Game';
+                        document.getElementById('gameIdInput').value = game.id;
+                        document.getElementById('gameTitleInput').value = game.title;
+                        document.getElementById('gamePlatformInput').value = game.platform;
+                        document.getElementById('gameReleaseInput').value = game.release;
+                        document.getElementById('gameGenreInput').value = game.genre;
+                        document.getElementById('gameMetaInput').value = game.meta;
+                        document.getElementById('gameBannerInput').value = game.banner;
+                        document.getElementById('gameDescInput').value = game.desc;
+                        document.getElementById('gameEditModal').classList.remove('hidden');
+                        document.getElementById('adminDashboardModal').classList.add('hidden');
+                    });
+                });
+
+                document.querySelectorAll('.delete-game-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (!currentUser?.isAdmin) return;
+                        const id = btn.dataset.id;
+                        if (confirm('Delete this game? This will also delete all its reviews.')) {
+                            deleteAllReviewsForGame(id);
+                            games = games.filter(g => g.id !== id);
+                            localStorage.setItem('gameverse_games', JSON.stringify(games));
+                            renderAdminGamesList();
+                            renderHomePage();
+                            if (currentGameId === id) {
+                                document.getElementById('backToHome').click();
+                            }
+                        }
+                    });
+                });
+            }
+
+            function renderAdminReviewsList() {
+                const allReviews = getAllReviews();
+                const reviewsList = document.getElementById('reviewsList');
+                reviewsList.innerHTML = allReviews.map(r => `
+                    <div style="background:#f0f2f8; padding:1rem; border-radius:16px; margin-bottom:1rem;">
+                        <strong>${r.user}</strong> on <strong>${r.gameTitle}</strong> · ⭐ ${r.rating}/10<br>
+                        <small>${new Date(r.date).toLocaleString()}</small>
+                        <p>${r.comment}</p>
+                        <button class="login-btn admin-delete-review" data-game="${r.gameId}" data-email="${r.userEmail}" data-date="${r.date}" style="padding:0.3rem 1rem; background:#dc3545;">Delete Review</button>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.admin-delete-review').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        deleteReview(btn.dataset.game, btn.dataset.email, btn.dataset.date);
+                        renderAdminReviewsList();
+                        renderHomePage();
+                        if (currentGameId === btn.dataset.game) {
+                            renderUserReviews(btn.dataset.game);
+                        }
+                    });
+                });
+            }
+
+            // ==================== EVENT LISTENERS ====================
+            document.getElementById('loginTab').addEventListener('click', () => {
+                document.getElementById('loginTab').classList.add('active');
+                document.getElementById('registerTab').classList.remove('active');
+                document.getElementById('modalTitle').innerText = '🔐 Login';
+            });
+            document.getElementById('registerTab').addEventListener('click', () => {
+                document.getElementById('registerTab').classList.add('active');
+                document.getElementById('loginTab').classList.remove('active');
+                document.getElementById('modalTitle').innerText = '📝 Register';
+            });
+
+            document.getElementById('loginSubmit').addEventListener('click', () => {
+                const email = document.getElementById('loginEmail').value.trim();
+                const pass = document.getElementById('loginPassword').value.trim();
+                const isLogin = document.getElementById('loginTab').classList.contains('active');
+
+                if (isLogin) {
+                    if (email === ADMIN_EMAIL && pass === ADMIN_PW) {
+                        currentUser = { email: ADMIN_EMAIL, isAdmin: true };
+                        localStorage.setItem('gameverse_session', JSON.stringify({ email: ADMIN_EMAIL }));
+                        document.getElementById('loginModal').classList.add('hidden');
+                        updateAuthUI();
+                        renderHomePage();
+                        return;
+                    }
+                    const user = users.find(u => u.email === email && u.password === pass);
+                    if (user) {
+                        currentUser = { email: user.email, isAdmin: false };
+                        localStorage.setItem('gameverse_session', JSON.stringify({ email: user.email }));
+                        document.getElementById('loginModal').classList.add('hidden');
+                        updateAuthUI();
+                        renderHomePage();
+                    } else {
+                        document.getElementById('loginError').innerText = 'Invalid credentials';
+                    }
+                } else {
+                    if (!email || !pass) {
+                        document.getElementById('loginError').innerText = 'Email and password required';
+                        return;
+                    }
+                    if (users.some(u => u.email === email)) {
+                        document.getElementById('loginError').innerText = 'Email already exists';
+                        return;
+                    }
+                    users.push({ email, password: pass, isAdmin: false });
+                    localStorage.setItem('gameverse_users', JSON.stringify(users));
+                    currentUser = { email, isAdmin: false };
+                    localStorage.setItem('gameverse_session', JSON.stringify({ email }));
+                    document.getElementById('loginModal').classList.add('hidden');
+                    updateAuthUI();
+                    renderHomePage();
+                }
+            });
+
+            document.getElementById('adminDashboardBtn').addEventListener('click', () => {
+                if (!currentUser?.isAdmin) return;
+                document.getElementById('adminDashboardModal').classList.remove('hidden');
+                renderAdminGamesList();
+                renderAdminReviewsList();
+            });
+
+            document.getElementById('manageGamesTab').addEventListener('click', () => {
+                document.getElementById('manageGamesTab').classList.add('active');
+                document.getElementById('manageReviewsTab').classList.remove('active');
+                document.getElementById('manageGamesSection').classList.remove('hidden');
+                document.getElementById('manageReviewsSection').classList.add('hidden');
+                renderAdminGamesList();
+            });
+            document.getElementById('manageReviewsTab').addEventListener('click', () => {
+                document.getElementById('manageReviewsTab').classList.add('active');
+                document.getElementById('manageGamesTab').classList.remove('active');
+                document.getElementById('manageReviewsSection').classList.remove('hidden');
+                document.getElementById('manageGamesSection').classList.add('hidden');
+                renderAdminReviewsList();
+            });
+
+            document.getElementById('closeDashboardBtn').addEventListener('click', () => {
+                document.getElementById('adminDashboardModal').classList.add('hidden');
+            });
+
+            document.getElementById('addGameBtn').addEventListener('click', () => {
+                document.getElementById('gameModalTitle').innerText = '➕ Add New Game';
+                document.getElementById('gameIdInput').value = '';
+                document.getElementById('gameTitleInput').value = '';
+                document.getElementById('gamePlatformInput').value = '';
+                document.getElementById('gameReleaseInput').value = '';
+                document.getElementById('gameGenreInput').value = '';
+                document.getElementById('gameMetaInput').value = '';
+                document.getElementById('gameBannerInput').value = '';
+                document.getElementById('gameDescInput').value = '';
+                document.getElementById('gameEditModal').classList.remove('hidden');
+                document.getElementById('adminDashboardModal').classList.add('hidden');
+            });
+
+            document.getElementById('saveGameBtn').addEventListener('click', () => {
+                const id = document.getElementById('gameIdInput').value.trim();
+                if (!id) { alert('Game ID required'); return; }
+                const existingIndex = games.findIndex(g => g.id === id);
+                const gameData = {
+                    id: id,
+                    title: document.getElementById('gameTitleInput').value.trim() || 'New Game',
+                    platform: document.getElementById('gamePlatformInput').value.trim() || 'Multi',
+                    release: document.getElementById('gameReleaseInput').value.trim() || '2025',
+                    genre: document.getElementById('gameGenreInput').value.trim() || 'action',
+                    meta: parseInt(document.getElementById('gameMetaInput').value) || 70,
+                    metaColor: parseInt(document.getElementById('gameMetaInput').value) >= 75 ? 'green' : parseInt(document.getElementById('gameMetaInput').value) >= 50 ? 'yellow' : 'red',
+                    userAvg: 7.0,
+                    reviewsCount: 0,
+                    banner: document.getElementById('gameBannerInput').value.trim() || 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600',
+                    desc: document.getElementById('gameDescInput').value.trim() || 'Awesome game.'
+                };
+
+                if (existingIndex >= 0) {
+                    games[existingIndex] = { ...games[existingIndex], ...gameData };
+                } else {
+                    games.push(gameData);
+                }
+                localStorage.setItem('gameverse_games', JSON.stringify(games));
+                document.getElementById('gameEditModal').classList.add('hidden');
+                renderHomePage();
+            });
+
+            document.getElementById('cancelGameEditBtn').addEventListener('click', () => {
+                document.getElementById('gameEditModal').classList.add('hidden');
+            });
+
+            document.getElementById('submitReviewBtn').addEventListener('click', () => {
+                if (!currentUser) {
+                    alert('Please login to submit a review.');
+                    return;
+                }
+                const rating = document.getElementById('ratingSelect').value;
+                const comment = document.getElementById('commentInput').value.trim() || 'Great game!';
+                const success = addReview(currentGameId, rating, comment, currentUser.email);
+                if (success) {
+                    renderUserReviews(currentGameId);
+                    const updated = getStoredReviews(currentGameId);
+                    const newAvg = (updated.reduce((s,r)=>s+r.rating,0)/updated.length).toFixed(1);
+                    document.getElementById('userScoreSpan').innerText = newAvg;
+                    document.getElementById('userCountSpan').innerText = updated.length;
+                    if (currentGameId === games[0]?.id) {
+                        document.querySelector('#heroUser span').innerText = newAvg;
+                    }
+                    document.getElementById('commentInput').value = '';
+                    renderHomePage();
+                } else {
+                    alert('You have already reviewed this game.');
+                }
+            });
+
+            document.getElementById('backToHome').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('homepageView').style.display = 'block';
+                document.getElementById('gameDetailView').style.display = 'none';
+                renderHomePage();
+            });
+
+            document.getElementById('homeLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('homepageView').style.display = 'block';
+                document.getElementById('gameDetailView').style.display = 'none';
+                renderHomePage();
+            });
+
+            document.getElementById('heroAddReview').addEventListener('click', () => {
+                if (games.length > 0) showGameDetail(games[0].id);
+            });
+
+            // Initialize
+            updateAuthUI();
+            renderHomePage();
+
+            // Pre-populate reviews
+            if (!localStorage.getItem('gameverse_reviews_naruto4')) {
+                addReview('naruto4', 9, 'Best anime fighter ever!', 'fan@example.com');
+                addReview('dbspark', 10, 'Brings back memories', 'goku@example.com');
+                addReview('eldenring', 10, 'Masterpiece', 'tarnished@example.com');
+                addReview('eafc25', 8, 'Solid football game', 'fan@example.com');
+                addReview('fortnite', 7, 'Fun with friends', 'builder@example.com');
+            }
+        })();
+    </script>
+</body>
+</html>
